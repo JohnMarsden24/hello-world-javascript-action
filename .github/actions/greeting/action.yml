@@ -12,8 +12,6 @@ outputs:
 defaults:
   run:
     working-directory: './.github/actions/greeting'
-  uses:
-    working-directory: './.github/actions/greeting'
 
 runs:
   using: 'composite'
@@ -22,4 +20,5 @@ runs:
     #   with:
     #     node-version: 16
     - run: npm ci
+      shell: bash
     - uses: './dist/index.js'
