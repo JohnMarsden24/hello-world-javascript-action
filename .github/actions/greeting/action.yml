@@ -9,10 +9,6 @@ outputs:
   time: # id of output
     description: 'The time we greeted you'
 
-defaults:
-  run:
-    working-directory: './.github/actions/greeting'
-
 runs:
   using: 'composite'
   steps:
@@ -21,4 +17,5 @@ runs:
         node-version: 16
     - run: npm install
       shell: bash
-    - uses: './dist/index.js'
+      working-directory: './.github/actions/greeting'
+    - uses: './.github/actions/greeting/dist/index.js'
