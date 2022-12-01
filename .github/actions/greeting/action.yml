@@ -13,5 +13,14 @@ outputs:
     description: 'The time we greeted you'
 
 runs:
-  using: 'node16'
-  main: 'dist/index.js'
+  using: 'composite'
+  steps:
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - run: npm install
+      shell: bash
+      working-directory: './.github/actions/greeting'
+    - run: node dist/index.js
+      shell: bash
+      working-directory: './.github/actions/greeting'
