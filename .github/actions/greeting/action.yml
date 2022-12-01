@@ -11,13 +11,15 @@ outputs:
 runs:
   using: 'composite'
   steps:
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 16
+    # - uses: actions/setup-node@v3
+    #   with:
+    #     node-version: 16
     # - name: Install dependencies
     #   working-directory: ./.github/actions/greeting
     #   run: 'npm ci'
     #   shell: bash
     # - name: Run action
-    - working-directory: './.github/actions/greeting'
-      uses: './dist/index.js'
+    # - working-directory: './.github/actions/greeting'
+    #   uses: './dist/index.js'
+    - run: 'echo hello world'
+      shell: bash
