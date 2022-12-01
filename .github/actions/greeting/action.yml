@@ -18,6 +18,7 @@ runs:
     - name: Install dependencies
       working-directory: ./.github/actions/greeting
       run: 'npm ci'
+      shell: bash
     - name: Run action
       working-directory: ./.github/actions/greeting
       uses: './dist/index.js'
