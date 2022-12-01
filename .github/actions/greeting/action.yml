@@ -11,14 +11,15 @@ outputs:
 
 defaults:
   run:
-    shell: bash
+    working-directory: './.github/actions/greeting'
+  uses:
     working-directory: './.github/actions/greeting'
 
 runs:
   using: 'composite'
   steps:
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 16
-    - run: 'npm ci'
+    # - uses: actions/setup-node@v3
+    #   with:
+    #     node-version: 16
+    - run: npm ci
     - uses: './dist/index.js'
