@@ -18,6 +18,5 @@ runs:
       shell: bash
       working-directory: ./.github/actions/greeting
     - uses: './dist/index.js'
-      working-directory: ./.github/actions/greeting
     - run: 'echo hello world'
       shell: bash
