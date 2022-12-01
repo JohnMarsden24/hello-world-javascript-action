@@ -8,6 +8,12 @@ inputs:
 outputs:
   time: # id of output
     description: 'The time we greeted you'
+
+defaults:
+  run:
+    shell: bash
+    working-directory: './.github/actions/greeting'
+
 runs:
   using: 'composite'
   steps:
@@ -15,8 +21,4 @@ runs:
       with:
         node-version: 16
     - run: 'npm ci'
-      shell: bash
-      working-directory: ./.github/actions/greeting
     - uses: './dist/index.js'
-    - run: 'echo hello world'
-      shell: bash
