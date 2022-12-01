@@ -9,5 +9,15 @@ outputs:
   time: # id of output
     description: 'The time we greeted you'
 runs:
-  using: 'node16'
-  main: 'dist/index.js'
+  using: 'composite'
+  steps:
+    - name: Setup node 16
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - name: Install dependencies
+      working-directory: ./.github/actions/greeting
+      run: 'npm ci'
+    - name: Run action
+      working-directory: ./.github/actions/greeting
+      uses: './dist/index.js'
