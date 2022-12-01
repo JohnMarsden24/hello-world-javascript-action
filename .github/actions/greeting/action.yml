@@ -10,12 +10,6 @@ outputs:
     description: 'The time we greeted you'
 
 runs:
-  using: 'composite'
-  steps:
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 16
-    - run: npm install
-      shell: bash
-      working-directory: './.github/actions/greeting'
-    - uses: './.github/actions/greeting'
+  using: 'node16'
+  pre: 'npm i'
+  main: 'dist/index.js'
