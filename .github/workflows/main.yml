@@ -14,7 +14,8 @@ jobs:
         id: hello
         with:
           who-to-greet: 'Mona the Octocat'
-          token: '${{ secrets.ACTIONS_SECRET }}'
+          # token: '${{ secrets.ACTIONS_SECRET }}'
+          token: 'blah blah'
       # Use the output from the `hello` step
       - name: Get the output time
         run: echo "The time was ${{ steps.hello.outputs.time }}"
