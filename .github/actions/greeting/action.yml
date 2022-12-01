@@ -17,5 +17,5 @@ runs:
         node-version: 16
     - run: npm install
       shell: bash
-      working-directory: './.github/actions/greeting'
-    - uses: './.github/actions/greeting/dist/index.js'
+      working-directory: '.github/actions/greeting'
+    - uses: '.github/actions/greeting'
