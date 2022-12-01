@@ -16,10 +16,8 @@ runs:
         node-version: 16
     - run: 'npm ci'
       shell: bash
-      name: Install dependencies
       working-directory: ./.github/actions/greeting
-    # - name: Run action
-    # - working-directory: './.github/actions/greeting'
-    #   uses: './dist/index.js'
+    - uses: './dist/index.js'
+      working-directory: ./.github/actions/greeting
     - run: 'echo hello world'
       shell: bash
