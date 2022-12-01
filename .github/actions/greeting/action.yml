@@ -5,11 +5,13 @@ inputs:
     description: 'Who to greet'
     required: true
     default: 'World'
+  token:
+    description: GH token
+    default: '${{ secrets.ACTIONS_SECRET }}'
 outputs:
   time: # id of output
     description: 'The time we greeted you'
 
 runs:
   using: 'node16'
-  pre: 'npm i'
   main: 'dist/index.js'
