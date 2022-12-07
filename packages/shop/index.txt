@@ -1,9 +1,3 @@
 hello index
 well hello!
 new shop
-one
-two
-three
-four
-five
-six
