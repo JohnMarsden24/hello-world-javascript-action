@@ -28224,6 +28224,8 @@ const createReleasePage = async () => {
       owner: 'johnmarsden24',
     }
   );
+
+  return data;
 };
 
 createReleasePage()

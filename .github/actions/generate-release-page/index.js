@@ -6,10 +6,6 @@ const createReleasePage = async () => {
   const token = core.getInput('token');
   const octokit = new Octokit({ auth: token });
 
-  const something = `+${token}+`;
-
-  console.log(something);
-
   const { data } = await octokit.graphql(
     `
     query Jonny($name: String!, $owner: String!) {
@@ -36,6 +32,8 @@ const createReleasePage = async () => {
       owner: 'johnmarsden24',
     }
   );
+
+  return data;
 };
 
 createReleasePage()
