@@ -21,7 +21,7 @@ jobs:
       - name: SHA
         run: echo '${{ github.sha }}'
       - name: SHA short
-        run: echo '${{ GITHUB_SHA::7 }}'
+        run: echo ${GITHUB_SHA::7}
   hello_world_job:
     runs-on: ubuntu-latest
     name: Generate release page
