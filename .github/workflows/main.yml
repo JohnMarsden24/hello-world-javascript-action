@@ -2,10 +2,10 @@ on: [push]
 
 jobs:
   show_context:
-    - name: Show GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: echo "$GITHUB_CONTEXT"
+    name: Show GitHub context
+    env:
+      GITHUB_CONTEXT: ${{ toJson(github) }}
+    run: echo "$GITHUB_CONTEXT"
   hello_world_job:
     runs-on: ubuntu-latest
     name: Generate release page
