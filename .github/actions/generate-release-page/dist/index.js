@@ -28198,7 +28198,7 @@ const createReleasePage = async () => {
   const token = core.getInput('token');
   const octokit = new Octokit({ auth: token });
 
-  const { data } = await octokit.graphql(
+  const data = await octokit.graphql(
     `
     query Jonny($name: String!, $owner: String!) {
       repository(name: $name, owner: $owner) {
