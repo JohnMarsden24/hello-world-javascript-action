@@ -28259,7 +28259,7 @@ const createReleasePage = async () => {
   const queryParams = `sha=${
     context.sha
   }&path=${`${parentDir}/${packageName}`}${
-    previousReleaseDate && `&since=${previousReleaseDate}`
+    previousReleaseDate ? `&since=${previousReleaseDate}` : ''
   }`;
 
   console.log(queryParams);
