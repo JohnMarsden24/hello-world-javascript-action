@@ -19,9 +19,7 @@ const createReleasePage = async () => {
     }
   );
 
-  console.log(JSON.stringify(workflows, null, 4));
-
-  const previousWorkFlowDate = workflows[0]?.created_at;
+  const previousWorkFlowDate = workflows.workflow_runs[0]?.created_at;
   const shortSha = context.sha.slice(0, 7);
   const newTag = `${packageName}-release-${shortSha}`;
 
