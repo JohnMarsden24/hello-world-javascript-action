@@ -49,7 +49,7 @@ const createReleasePage = async () => {
       repo,
       tag_name: newTag,
       target_commitish: 'main',
-      ...(previousTag & { previous_tag_name: previousTag }),
+      ...(previousTag && { previous_tag_name: previousTag }),
     }
   );
 
