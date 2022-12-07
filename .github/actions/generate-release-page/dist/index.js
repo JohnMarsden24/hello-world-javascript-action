@@ -28228,6 +28228,8 @@ const createReleasePage = async () => {
 
   let previousReleaseDate;
 
+  console.log({ previousTag });
+
   if (previousTag) {
     const {
       repository: { release },
