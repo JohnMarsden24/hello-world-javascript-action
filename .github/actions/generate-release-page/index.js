@@ -88,7 +88,7 @@ const createReleasePage = async () => {
       owner,
       repo,
       tag_name: newTag,
-      ...(previousTag && { previous_tag_name: previousTag }),
+      // ...(previousTag && { previous_tag_name: previousTag }),
     }
   );
 
