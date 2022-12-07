@@ -9,7 +9,7 @@ const createReleasePage = async () => {
   const packageName = core.getInput('package-name');
   const octokit = new Octokit({ auth: token });
 
-  const data = await octokit.graphql(
+  const { repository } = await octokit.graphql(
     `
     query GetPreviousTag($repo: String!, $owner: String!, $packageName: String!) {
       repository(name: $repo, owner: $owner) {
@@ -31,7 +31,7 @@ const createReleasePage = async () => {
     }
   );
 
-  const previousTag = data.repository.refs.nodes[0]?.name;
+  const previousTag = repository.refs.nodes[0]?.name;
 
   const shortSha = context.sha.slice(0, 7);
   const newTag = `${packageName}-release-${shortSha}`;
@@ -42,7 +42,7 @@ const createReleasePage = async () => {
     newTag,
   });
 
-  const response = await octokit.request(
+  const { data } = await octokit.request(
     `POST /repos/${owner}/${repo}/releases/generate-notes`,
     {
       owner,
@@ -50,6 +50,17 @@ const createReleasePage = async () => {
       tag_name: newTag,
       target_commitish: 'main',
       ...(previousTag & { previous_tag_name: previousTag }),
+    }
+  );
+
+  const response = await octokit.request(
+    `POST /repos/${owner}/${repo}/releases`,
+    {
+      owner,
+      repo,
+      tag_name: newTag,
+      name: data.name,
+      body: data.body,
     }
   );
 
