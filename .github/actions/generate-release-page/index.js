@@ -15,7 +15,7 @@ const createReleasePage = async () => {
       repository(name: $repo, owner: $owner) {
         refs(refPrefix: "refs/tags/", first: 1, query: $packageName, orderBy: {
         field: TAG_COMMIT_DATE,
-        direction: DESC
+        direction: ASC
         }) {
           nodes {
             name
