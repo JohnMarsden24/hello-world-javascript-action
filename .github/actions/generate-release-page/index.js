@@ -1,5 +1,5 @@
 const core = require('@actions/core');
-const github = require('@actions/github');
+const { context } = require('@actions/github');
 const { Octokit } = require('octokit');
 
 const createReleasePage = async () => {
@@ -32,6 +32,8 @@ const createReleasePage = async () => {
       owner: 'johnmarsden24',
     }
   );
+
+  console.log(JSON.stringify(context, null, 4));
 
   return data;
 };
