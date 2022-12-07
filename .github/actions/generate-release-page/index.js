@@ -31,7 +31,7 @@ const createReleasePage = async () => {
     }
   );
 
-  const previousTag = repository.refs.nodes[0]?.name;
+  const previousTag = data.repository.refs.nodes[0]?.name;
 
   const shortSha = context.sha.slice(0, 7);
   const newTag = `${packageName}-release-${shortSha}`;
