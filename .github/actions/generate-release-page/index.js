@@ -19,6 +19,9 @@ const createReleasePage = async () => {
         }) {
           nodes {
             name
+            target {
+              oid
+            }
           }
         }
       }
@@ -32,6 +35,7 @@ const createReleasePage = async () => {
   );
 
   const previousTag = repository.refs.nodes[0]?.name;
+  const previousCommit = repository.refs.nodes[0]?.target.oid;
 
   const shortSha = context.sha.slice(0, 7);
   const newTag = `${packageName}-release-${shortSha}`;
@@ -48,7 +52,7 @@ const createReleasePage = async () => {
       owner,
       repo,
       tag_name: newTag,
-      target_commitish: 'main',
+      target_commitish: previousCommit,
       ...(previousTag && { previous_tag_name: previousTag }),
     }
   );
