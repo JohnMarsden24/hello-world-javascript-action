@@ -28308,7 +28308,7 @@ const createReleasePage = async () => {
     repo,
     tag_name: newTag,
     name: newTag,
-    body: markup,
+    body: markup.data,
     // generate_release_notes: true,
   });
 };
