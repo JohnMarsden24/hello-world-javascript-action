@@ -28226,33 +28226,39 @@ const createReleasePage = async () => {
 
   const previousTag = repository.refs.nodes[0]?.name;
 
-  const {
-    repository: { release },
-  } = await octokit.graphql(
-    `
-    query GetPreviousTag($repo: String!, $owner: String!, $tagName: String!) {
-      repository(name: $repo, owner: $owner) {
-        release(tagName: $tagName) {
-          publishedAt
+  let previousReleaseDate;
+
+  if (previousTag) {
+    const {
+      repository: { release },
+    } = await octokit.graphql(
+      `
+      query GetPreviousTag($repo: String!, $owner: String!, $tagName: String!) {
+        repository(name: $repo, owner: $owner) {
+          release(tagName: $tagName) {
+            publishedAt
+          }
         }
       }
-    }
-  `,
-    {
-      repo,
-      owner,
-      tagName: previousTag,
-    }
-  );
+    `,
+      {
+        repo,
+        owner,
+        tagName: previousTag,
+      }
+    );
 
-  const previousCommit = repository.refs.nodes[0]?.target.oid;
+    previousReleaseDate = release.publishedAt;
+  }
 
   const shortSha = context.sha.slice(0, 7);
   const newTag = `${packageName}-release-${shortSha}`;
 
-  const queryParams = `sha=${context.sha}&since=${
-    release.publishedAt
-  }&path=${`${parentDir}/${packageName}`}`;
+  const queryParams = `sha=${
+    context.sha
+  }&path=${`${parentDir}/${packageName}`}${
+    previousReleaseDate && `&since=${previousReleaseDate}`
+  }`;
 
   console.log(queryParams);
 
