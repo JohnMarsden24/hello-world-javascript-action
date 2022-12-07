@@ -1,6 +1,9 @@
 name: 'Generate release page'
 description: 'Generate a release page'
 inputs:
+  package-name:
+    description: Name of package
+    required: true
   token:
     description: GH token
     required: true
