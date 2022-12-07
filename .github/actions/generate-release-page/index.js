@@ -10,7 +10,7 @@ const createReleasePage = async () => {
   const parentDir = core.getInput('parent-dir');
   const octokit = new Octokit({ auth: token });
 
-  console.log(JSON.stringify(context, null, 4));
+  // console.log(JSON.stringify(context, null, 4));
 
   const { repository } = await octokit.graphql(
     `
@@ -36,53 +36,51 @@ const createReleasePage = async () => {
 
   const previousTag = repository.refs.nodes[0]?.name;
 
-  let previousReleaseDate;
+  // let previousReleaseDate;
 
-  console.log({ previousTag });
+  // if (previousTag) {
+  //   const {
+  //     repository: { release },
+  //   } = await octokit.graphql(
+  //     `
+  //     query GetPreviousTag($repo: String!, $owner: String!, $tagName: String!) {
+  //       repository(name: $repo, owner: $owner) {
+  //         release(tagName: $tagName) {
+  //           publishedAt
+  //         }
+  //       }
+  //     }
+  //   `,
+  //     {
+  //       repo,
+  //       owner,
+  //       tagName: previousTag,
+  //     }
+  //   );
 
-  if (previousTag) {
-    const {
-      repository: { release },
-    } = await octokit.graphql(
-      `
-      query GetPreviousTag($repo: String!, $owner: String!, $tagName: String!) {
-        repository(name: $repo, owner: $owner) {
-          release(tagName: $tagName) {
-            publishedAt
-          }
-        }
-      }
-    `,
-      {
-        repo,
-        owner,
-        tagName: previousTag,
-      }
-    );
-
-    previousReleaseDate = release.publishedAt;
-  }
+  //   previousReleaseDate = release.publishedAt;
+  // }
 
   const shortSha = context.sha.slice(0, 7);
   const newTag = `${packageName}-release-${shortSha}`;
 
-  const queryParams = `sha=${
-    context.sha
-  }&path=${`${parentDir}/${packageName}`}${
-    previousReleaseDate ? `&since=${previousReleaseDate}` : ''
-  }`;
+  // const queryParams = `sha=${
+  //   context.sha
+  // }&path=${`${parentDir}/${packageName}`}${
+  //   previousReleaseDate ? `&since=${previousReleaseDate}` : ''
+  // }`;
 
-  console.log(queryParams);
+  // console.log(queryParams);
 
-  const { data: commits } = await octokit.request(
-    `GET /repos/${owner}/${repo}/commits?${queryParams}`,
-    {
-      owner,
-      repo,
-    }
-  );
+  // const { data: commits } = await octokit.request(
+  //   `GET /repos/${owner}/${repo}/commits?${queryParams}`,
+  //   {
+  //     owner,
+  //     repo,
+  //   }
+  // );
 
-  console.log(JSON.stringify(commits, null, 4));
+  // console.log(JSON.stringify(commits, null, 4));
 
   const { data } = await octokit.request(
     `POST /repos/${owner}/${repo}/releases/generate-notes`,
@@ -90,20 +88,17 @@ const createReleasePage = async () => {
       owner,
       repo,
       tag_name: newTag,
-      // ...(previousTag && { previous_tag_name: previousTag }),
+      ...(previousTag && { previous_tag_name: previousTag }),
     }
   );
 
-  const response = await octokit.request(
-    `POST /repos/${owner}/${repo}/releases`,
-    {
-      owner,
-      repo,
-      tag_name: newTag,
-      name: data.name,
-      body: data.body,
-    }
-  );
+  await octokit.request(`POST /repos/${owner}/${repo}/releases`, {
+    owner,
+    repo,
+    tag_name: newTag,
+    name: data.name,
+    body: data.body,
+  });
 };
 
 createReleasePage()
