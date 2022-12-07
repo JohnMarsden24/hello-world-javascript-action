@@ -82,22 +82,23 @@ const createReleasePage = async () => {
 
   // console.log(JSON.stringify(commits, null, 4));
 
-  const { data } = await octokit.request(
-    `POST /repos/${owner}/${repo}/releases/generate-notes`,
-    {
-      owner,
-      repo,
-      tag_name: newTag,
-      ...(previousTag && { previous_tag_name: previousTag }),
-    }
-  );
+  // const { data } = await octokit.request(
+  //   `POST /repos/${owner}/${repo}/releases/generate-notes`,
+  //   {
+  //     owner,
+  //     repo,
+  //     tag_name: newTag,
+  //     ...(previousTag && { previous_tag_name: previousTag }),
+  //   }
+  // );
 
   await octokit.request(`POST /repos/${owner}/${repo}/releases`, {
     owner,
     repo,
     tag_name: newTag,
-    name: data.name,
-    body: data.body,
+    name: newTag,
+    // body: data.body,
+    generate_release_notes: true,
   });
 };
 
