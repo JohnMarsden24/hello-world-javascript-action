@@ -7,6 +7,9 @@ inputs:
   token:
     description: GH token
     required: true
+  parent-dir:
+    description: Parent directory of package
+    required: true
 runs:
   using: 'node16'
   main: 'dist/index.js'

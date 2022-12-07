@@ -28199,6 +28199,7 @@ const createReleasePage = async () => {
   const owner = 'johnmarsden24';
   const token = core.getInput('token');
   const packageName = core.getInput('package-name');
+  const parentDir = core.getInput('parent-dir');
   const octokit = new Octokit({ auth: token });
 
   const { repository } = await octokit.graphql(
@@ -28225,14 +28226,53 @@ const createReleasePage = async () => {
 
   const previousTag = repository.refs.nodes[0]?.name;
 
+  let previousReleaseDate;
+
+  console.log({ previousTag });
+
+  if (previousTag) {
+    const {
+      repository: { release },
+    } = await octokit.graphql(
+      `
+      query GetPreviousTag($repo: String!, $owner: String!, $tagName: String!) {
+        repository(name: $repo, owner: $owner) {
+          release(tagName: $tagName) {
+            publishedAt
+          }
+        }
+      }
+    `,
+      {
+        repo,
+        owner,
+        tagName: previousTag,
+      }
+    );
+
+    previousReleaseDate = release.publishedAt;
+  }
+
   const shortSha = context.sha.slice(0, 7);
   const newTag = `${packageName}-release-${shortSha}`;
 
-  console.log({
-    previousTag,
-    shortSha,
-    newTag,
-  });
+  const queryParams = `sha=${
+    context.sha
+  }&path=${`${parentDir}/${packageName}`}${
+    previousReleaseDate ? `&since=${previousReleaseDate}` : ''
+  }`;
+
+  console.log(queryParams);
+
+  const commits = await octokit.request(
+    `GET /repos/${owner}/${repo}/commits?${queryParams}`,
+    {
+      owner,
+      repo,
+    }
+  );
+
+  console.log(JSON.stringify(commits, null, 4));
 
   const { data } = await octokit.request(
     `POST /repos/${owner}/${repo}/releases/generate-notes`,
@@ -28240,8 +28280,7 @@ const createReleasePage = async () => {
       owner,
       repo,
       tag_name: newTag,
-      target_commitish: 'main',
-      ...(previousTag && { previous_tag_name: previousTag }),
+      // ...(previousTag && { previous_tag_name: previousTag }),
     }
   );
 
@@ -28255,8 +28294,6 @@ const createReleasePage = async () => {
       body: data.body,
     }
   );
-
-  console.log(response);
 };
 
 createReleasePage()
