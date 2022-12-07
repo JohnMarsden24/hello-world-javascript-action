@@ -1,18 +1,42 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const { Octokit } = require('octokit');
 
-try {
-  // `who-to-greet` input defined in action metadata file
-  const nameToGreet = core.getInput('who-to-greet');
+const createReleasePage = async () => {
   const token = core.getInput('token');
-  console.log('//////////////////////////');
-  console.log(token);
-  console.log('//////////////////////////');
-  console.log(`Hello ${nameToGreet}!`);
-  const time = new Date().toTimeString();
-  core.setOutput('time', time);
-  // Get the JSON webhook payload for the event that triggered the workflow
-  // const payload = JSON.stringify(github.context.payload, undefined, 2);
-} catch (error) {
-  core.setFailed(error.message);
-}
+  const octokit = new Octokit({ auth: token });
+
+  const { data } = await octokit.graphql(
+    `
+    query Jonny($name: String!, $owner: String!) {
+      repository(name: $name, owner: $owner) {
+        refs(refPrefix: "refs/tags/", first: 2, query: "prod-test", orderBy: {
+        field: TAG_COMMIT_DATE,
+        direction: DESC
+        }) {
+        totalCount
+          nodes {
+            name
+            target {
+              oid
+              commitResourcePath
+              abbreviatedOid
+            }
+          }
+        }
+      }
+    }
+  `,
+    {
+      name: 'hello-world-javascript-action',
+      owner: 'johnmarsden24',
+    }
+  );
+};
+
+createReleasePage()
+  .then((data) => console.log(JSON.stringify(data, null, 4)))
+  .catch((err) => {
+    console.log(err.message);
+    core.setFailed(err.message);
+  });
