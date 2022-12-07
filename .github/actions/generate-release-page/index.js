@@ -10,6 +10,8 @@ const createReleasePage = async () => {
   const parentDir = core.getInput('parent-dir');
   const octokit = new Octokit({ auth: token });
 
+  console.log(JSON.stringify(context, null, 4));
+
   const { repository } = await octokit.graphql(
     `
     query GetPreviousTag($repo: String!, $owner: String!, $packageName: String!) {
@@ -72,7 +74,7 @@ const createReleasePage = async () => {
 
   console.log(queryParams);
 
-  const commits = await octokit.request(
+  const { data: commits } = await octokit.request(
     `GET /repos/${owner}/${repo}/commits?${queryParams}`,
     {
       owner,
