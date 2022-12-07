@@ -10,64 +10,23 @@ const createReleasePage = async () => {
   const parentDir = core.getInput('parent-dir');
   const octokit = new Octokit({ auth: token });
 
-  console.log(JSON.stringify(context, null, 4));
-
-  const { repository } = await octokit.graphql(
-    `
-    query GetPreviousTag($repo: String!, $owner: String!, $packageName: String!) {
-      repository(name: $repo, owner: $owner) {
-        refs(refPrefix: "refs/tags/", first: 1, query: $packageName, orderBy: {
-        field: TAG_COMMIT_DATE,
-        direction: ASC
-        }) {
-          nodes {
-            name
-          }
-        }
-      }
-    }
-  `,
+  const { data: workflows } = await octokit.request(
+    `GET /repos/{owner}/{repo}/actions/workflows/{workflowName}/runs?status=success`,
     {
-      repo,
       owner,
-      packageName,
+      repo,
+      workflowName: `${context.workflow}.yml`,
     }
   );
 
-  const previousTag = repository.refs.nodes[0]?.name;
-
-  let previousReleaseDate;
-
-  if (previousTag) {
-    const {
-      repository: { release },
-    } = await octokit.graphql(
-      `
-      query GetPreviousTag($repo: String!, $owner: String!, $tagName: String!) {
-        repository(name: $repo, owner: $owner) {
-          release(tagName: $tagName) {
-            publishedAt
-          }
-        }
-      }
-    `,
-      {
-        repo,
-        owner,
-        tagName: previousTag,
-      }
-    );
-
-    previousReleaseDate = release.publishedAt;
-  }
-
+  const previousWorkFlowDate = workflows[0]?.created_at;
   const shortSha = context.sha.slice(0, 7);
   const newTag = `${packageName}-release-${shortSha}`;
 
   const queryParams = `sha=${
     context.sha
   }&path=${`${parentDir}/${packageName}`}${
-    previousReleaseDate ? `&since=${previousReleaseDate}` : ''
+    previousWorkFlowDate ? `&since=${previousWorkFlowDate}` : ''
   }`;
 
   console.log({ queryParams });
@@ -80,44 +39,29 @@ const createReleasePage = async () => {
     }
   );
 
-  console.log(JSON.stringify(commits, null, 4));
-
-  console.log({
-    newTag,
-    previousTag,
-  });
+  // console.log(JSON.stringify(commits, null, 4));
 
   const mappedCommits = commits
     .map(
       (parent) =>
-        `* ${parent.sha} ${parent.commit.message} @${parent.author.login}`
+        `- ${parent.sha} ${parent.commit.message} @${parent.author.login}`
     )
     .join('\n');
 
-  console.log(mappedCommits);
+  // console.log(mappedCommits);
 
-  // const { data } = await octokit.request(
-  //   `POST /repos/${owner}/${repo}/releases/generate-notes`,
-  //   {
-  //     owner,
-  //     repo,
-  //     tag_name: newTag,
-  //     ...(previousTag && { previous_tag_name: previousTag }),
-  //   }
-  // );
-  const markup = await octokit.request('POST /markdown', {
+  const { data: markup } = await octokit.request('POST /markdown', {
     mode: 'gfm',
     context: 'JohnMarsden24/hello-world-javascript-action',
     text: mappedCommits,
   });
 
-  await octokit.request(`POST /repos/${owner}/${repo}/releases`, {
+  await octokit.request('POST /repos/{owner}/{repo}/releases', {
     owner,
     repo,
     tag_name: newTag,
     name: newTag,
-    body: markup.data,
-    // generate_release_notes: true,
+    body: markup,
   });
 };
 
