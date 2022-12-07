@@ -23,4 +23,4 @@ jobs:
         with:
           token: '${{ secrets.ACTION_SECRET }}'
           package-name: 'shop'
-          parent-name: 'packages'
+          parent-dir: 'packages'
