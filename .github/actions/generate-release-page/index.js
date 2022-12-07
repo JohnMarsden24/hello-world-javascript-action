@@ -36,7 +36,13 @@ const createReleasePage = async () => {
   const shortSha = context.sha.slice(0, 7);
   const newTag = `${packageName}-release-${shortSha}`;
 
-  await octokit.request(
+  console.log({
+    previousTag,
+    shortSha,
+    newTag,
+  });
+
+  const response = await octokit.request(
     `POST /repos/${owner}/${repo}/releases/generate-notes`,
     {
       owner,
@@ -46,6 +52,8 @@ const createReleasePage = async () => {
       ...(previousTag & { previous_tag_name: previousTag }),
     }
   );
+
+  console.log(response);
 };
 
 createReleasePage()
