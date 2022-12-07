@@ -2,6 +2,7 @@ on: [push]
 
 jobs:
   show_context:
+    runs-on: ubuntu-latest
     name: Show GitHub context
     steps:
       - name: Dump GitHub context
