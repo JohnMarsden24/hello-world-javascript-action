@@ -10,7 +10,7 @@ const createReleasePage = async () => {
   const parentDir = core.getInput('parent-dir');
   const octokit = new Octokit({ auth: token });
 
-  // console.log(JSON.stringify(context, null, 4));
+  console.log(JSON.stringify(context, null, 4));
 
   const { repository } = await octokit.graphql(
     `
@@ -82,13 +82,18 @@ const createReleasePage = async () => {
 
   // console.log(JSON.stringify(commits, null, 4));
 
+  console.log({
+    newTag,
+    previousTag,
+  });
+
   const { data } = await octokit.request(
     `POST /repos/${owner}/${repo}/releases/generate-notes`,
     {
       owner,
       repo,
       tag_name: newTag,
-      // ...(previousTag && { previous_tag_name: previousTag }),
+      ...(previousTag && { previous_tag_name: previousTag }),
     }
   );
 
