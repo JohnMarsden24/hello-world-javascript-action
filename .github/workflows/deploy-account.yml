@@ -1,0 +1,24 @@
+name: deploy-account
+'on':
+  push:
+    branches:
+      - main
+    paths:
+      - packages/account/**
+      - .github/workflows/deploy-account.yml
+
+defaults:
+  run:
+    working-directory: packages/account
+
+jobs:
+  hello_world_job:
+    runs-on: ubuntu-latest
+    name: Generate release page
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Generate release page
+        uses: ./.github/actions/generate-release-page # Uses an action in the root directory
+        with:
+          token: '${{ secrets.ACTION_SECRET }}'
