@@ -7,6 +7,7 @@ inputs:
   token:
     description: GH token
     required: true
+    default: '${{ github.token }}'
   parent-dir:
     description: Parent directory of package
     required: true
