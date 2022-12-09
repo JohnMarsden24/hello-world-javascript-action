@@ -28206,7 +28206,7 @@ const octokit = new Octokit({ auth: token });
 
 const getLatestWorkflow = async () => {
   const { data: workflows } = await octokit.request(
-    `GET /repos/{owner}/{repo}/actions/workflows/{workflowName}/runs`,
+    `GET /repos/{owner}/{repo}/actions/workflows/{workflowName}/runs?per_page=1`,
     {
       owner,
       repo,
@@ -28226,6 +28226,8 @@ const getCommitsSinceLastWorkflow = async (previousWorkFlowDate) => {
   }&path=${`${parentDir}/${packageName}`}${
     previousWorkFlowDate ? `&since=${previousWorkFlowDate}` : ''
   }`;
+
+  console.log(queryParams);
 
   const { data: commits } = await octokit.request(
     `GET /repos/${owner}/${repo}/commits?${queryParams}`,
