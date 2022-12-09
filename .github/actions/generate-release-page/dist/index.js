@@ -28190,20 +28190,15 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-const { getIDToken, getInput, setFailed, error } = __nccwpck_require__(2186);
+const { getInput, setFailed, error } = __nccwpck_require__(2186);
 const { context } = __nccwpck_require__(5438);
 const { Octokit } = __nccwpck_require__(7467);
 
 const repo = 'hello-world-javascript-action';
 const owner = 'johnmarsden24';
-// const token = getInput('token');
+const token = getInput('token');
 
-let octokit;
-
-const initOctokit = async () => {
-  const token = await getIDToken();
-  octokit = new Octokit({ auth: token });
-};
+const octokit = new Octokit({ auth: token });
 
 const getCommitMessage = async () => {
   const { id, message, author } = context.payload.commits[0];
@@ -28235,13 +28230,12 @@ const createReleasePage = async (markup) => {
   });
 };
 
-initOctokit()
-  .then(getCommitMessage)
+getCommitMessage
   .then((commit) => createMarkup(commit))
   .then((markup) => createReleasePage(markup))
   .catch((err) => {
     error(err.message);
-    core.setFailed(err.message);
+    setFailed(err.message);
   });
 
 // const core = require('@actions/core');

@@ -1,17 +1,12 @@
-const { getIDToken, getInput, setFailed, error } = require('@actions/core');
+const { getInput, setFailed, error } = require('@actions/core');
 const { context } = require('@actions/github');
 const { Octokit } = require('octokit');
 
 const repo = 'hello-world-javascript-action';
 const owner = 'johnmarsden24';
-// const token = getInput('token');
+const token = getInput('token');
 
-let octokit;
-
-const initOctokit = async () => {
-  const token = await getIDToken();
-  octokit = new Octokit({ auth: token });
-};
+const octokit = new Octokit({ auth: token });
 
 const getCommitMessage = async () => {
   const { id, message, author } = context.payload.commits[0];
@@ -43,13 +38,12 @@ const createReleasePage = async (markup) => {
   });
 };
 
-initOctokit()
-  .then(getCommitMessage)
+getCommitMessage
   .then((commit) => createMarkup(commit))
   .then((markup) => createReleasePage(markup))
   .catch((err) => {
     error(err.message);
-    core.setFailed(err.message);
+    setFailed(err.message);
   });
 
 // const core = require('@actions/core');
