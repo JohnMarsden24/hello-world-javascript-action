@@ -12,6 +12,8 @@ const newTag = `${packageName}-release-${shortSha}`;
 
 const octokit = new Octokit({ auth: token });
 
+console.log(JSON.stringify(context, null, 4));
+
 const getLatestWorkflow = async () => {
   const { data: workflows } = await octokit.request(
     `GET /repos/{owner}/{repo}/actions/workflows/{workflowName}/runs?per_page=1`,
@@ -23,7 +25,7 @@ const getLatestWorkflow = async () => {
   );
   const previousWorkFlowDate = workflows.workflow_runs[0]?.created_at;
 
-  console.log(JSON.stringify(workflows, null, 4));
+  // console.log(JSON.stringify(workflows, null, 4));
 
   return previousWorkFlowDate;
 };
@@ -35,7 +37,7 @@ const getCommitsSinceLastWorkflow = async (previousWorkFlowDate) => {
     previousWorkFlowDate ? `&since=${previousWorkFlowDate}` : ''
   }`;
 
-  console.log(queryParams);
+  // console.log(queryParams);
 
   const { data: commits } = await octokit.request(
     `GET /repos/${owner}/${repo}/commits?${queryParams}`,
@@ -45,7 +47,7 @@ const getCommitsSinceLastWorkflow = async (previousWorkFlowDate) => {
     }
   );
 
-  console.log(JSON.stringify(commits, null, 4));
+  // console.log(JSON.stringify(commits, null, 4));
 
   return commits;
 };
