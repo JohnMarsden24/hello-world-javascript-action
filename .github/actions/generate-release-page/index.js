@@ -23,6 +23,8 @@ const getLatestWorkflow = async () => {
   );
   const previousWorkFlowDate = workflows.workflow_runs[0]?.created_at;
 
+  console.log(JSON.stringify(workflows, null, 4));
+
   return previousWorkFlowDate;
 };
 
@@ -40,6 +42,8 @@ const getCommitsSinceLastWorkflow = async (previousWorkFlowDate) => {
       repo,
     }
   );
+
+  console.log(JSON.stringify(commits, null, 4));
 
   return commits;
 };
