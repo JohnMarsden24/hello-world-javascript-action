@@ -28230,7 +28230,7 @@ const createReleasePage = async (markup) => {
   });
 };
 
-getCommitMessage
+getCommitMessage()
   .then((commit) => createMarkup(commit))
   .then((markup) => createReleasePage(markup))
   .catch((err) => {
