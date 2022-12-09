@@ -28202,6 +28202,8 @@ const parentDir = core.getInput('parent-dir');
 const shortSha = context.sha.slice(0, 7);
 const newTag = `${packageName}-release-${shortSha}`;
 
+console.log(JSON.stringify(token));
+
 const octokit = new Octokit({ auth: token });
 
 console.log(JSON.stringify(context, null, 4));
