@@ -4,16 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "ncc build index.js --license licenses.txt"
+    "build": "ncc build index.ts --license licenses.txt"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1",
-    "octokit": "^2.0.10"
+    "@octokit/core": "^4.1.0",
+    "@octokit/request-error": "^3.0.2",
+    "octokit": "^2.0.10",
+    "zx": "^7.1.1"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.34.0"
+    "@vercel/ncc": "^0.34.0",
+    "typescript": "^4.9.4"
   }
 }
