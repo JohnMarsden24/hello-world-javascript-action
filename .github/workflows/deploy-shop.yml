@@ -21,6 +21,5 @@ jobs:
       - name: Generate release page
         uses: ./.github/actions/generate-release-page # Uses an action in the root directory
         with:
-          # token: '${{ github.token }}'
           package-name: 'shop'
           parent-dir: 'packages'
